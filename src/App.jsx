@@ -1,15 +1,22 @@
 import React from "react";
-import { BrowserRouter } from "react-router-dom";
 
 import { CssBaseline } from "@mui/material";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+
 import RPC from "./views/RPC/components/RPC";
+
+const theme = createTheme({
+  typography: {
+    fontFamily: ['"Barlow Semi Condensed"', "Arial", "sans-serif"].join(","),
+  },
+});
 
 export const App = () => {
   return (
-    <BrowserRouter>
-      <CssBaseline>
+    <CssBaseline>
+      <ThemeProvider theme={theme}>
         <RPC />
-      </CssBaseline>
-    </BrowserRouter>
+      </ThemeProvider>
+    </CssBaseline>
   );
 };
