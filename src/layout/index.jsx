@@ -2,10 +2,10 @@ import React from "react";
 
 import { Box } from "@mui/material";
 
-import Header from "./Header";
-import GameBoard from "./GameBoard";
+import Header from "../views/Header/components/Header";
+import GameBoard from "../views/GameBoard/components/GameBoard";
 
-const RPC = () => {
+const Layout = () => {
   return (
     <Box
       sx={{
@@ -25,4 +25,4 @@ const RPC = () => {
   );
 };
 
-export default RPC;
+export default Layout;
