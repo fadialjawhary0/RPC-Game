@@ -34,7 +34,8 @@ const RulesDialog = ({ openDialog, closeDialog }) => {
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
-          <DialogTitle sx={{ fontWeight: 700, fontSize: '2rem' }}>
+          <DialogTitle
+            sx={{ fontWeight: 700, fontSize: '2rem', color: '#000000' }}>
             RULES
           </DialogTitle>
           <img
