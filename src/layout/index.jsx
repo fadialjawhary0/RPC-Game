@@ -4,6 +4,7 @@ import { Box } from "@mui/material";
 
 import Header from "../views/Header/components/Header";
 import GameBoard from "../views/GameBoard/components/GameBoard";
+import RulesButton from "../views/GameRules/components/RulesButton";
 
 const Layout = () => {
   return (
@@ -21,6 +22,7 @@ const Layout = () => {
     >
       <Header />
       <GameBoard />
+      <RulesButton />
     </Box>
   );
 };
