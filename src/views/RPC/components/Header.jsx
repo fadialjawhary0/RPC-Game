@@ -49,6 +49,7 @@ const Header = () => {
         <Typography
           sx={{
             color: "hsl(229, 64%, 46%)",
+            letterSpacing: "2px",
           }}
         >
           SCORE
