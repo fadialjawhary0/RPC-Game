@@ -56,7 +56,6 @@ const GameIcon = ({
     small: {
       outerLayer: { width: '9rem', height: '9rem' },
       innerLayer: { width: '7rem', height: '7rem' },
-      icon: { width: '50%' }, // adjust as necessary
     },
     large: {
       outerLayer: { width: '14rem', height: '14rem' },
@@ -69,8 +68,6 @@ const GameIcon = ({
           top: '2px',
         },
       },
-
-      icon: { width: '50%' }, // adjust as necessary
     },
   };
 
