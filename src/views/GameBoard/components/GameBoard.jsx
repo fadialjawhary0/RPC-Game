@@ -1,77 +1,207 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
-import { Avatar, Box } from '@mui/material';
+import { Box, Typography, useMediaQuery } from '@mui/material';
+import { useTheme } from '@emotion/react';
 
-import { Assets } from '../../../constants/assets.const.mjs';
+import { determineWinner } from '../../../helpers/determineWinner.helper';
+import { Assets, GameIcons } from '../../../constants/assets.const.mjs';
+import { ScoreContext } from '../../../context/score.context';
+import { ResultStatus } from '../../../constants';
+import GameIcon from './GameIcon';
+import Result from './Result';
 
 const GameBoard = () => {
-  const outerLayerDefaultStyles = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'absolute',
-    width: '9rem',
-    height: '9rem',
-    borderRadius: '50%',
-    cursor: 'pointer',
-  };
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const innerLayerDefaultStyles = {
-    backgroundColor: '#e4e4e4',
-    boxShadow: '0 -6px 0 #b8b8b8',
-    width: '7rem',
-    height: '7rem',
-    top: '4px',
-    borderRadius: '50%',
-    ':active': {
-      boxShadow: '0 -4px 0 #b8b8b8',
-      top: '2px',
+  const { score, setScore } = useContext(ScoreContext);
+
+  const [playerSelectedOption, setPlayerSelectedOption] = useState(null);
+  const [computerSelectedOption, setComputerSelectedOption] = useState(null);
+  const [showComputerChoice, setShowComputerChoice] = useState(false);
+  const [result, setResult] = useState('');
+  const [showResult, setShowResult] = useState(false);
+
+  const iconsPlacements = {
+    Rock: {
+      position: 'absolute',
+      transform: 'translateX(-50%)',
+      bottom: 0,
+      left: '50%',
+    },
+    Paper: {
+      position: 'absolute',
+      left: '-1rem',
+      top: '-2rem',
+    },
+    Scissors: {
+      position: 'absolute',
+      right: '-1rem',
+      top: '-2rem',
     },
   };
 
+  const iconsPlacementsStyles = {
+    Rock: iconsPlacements.Rock,
+    Paper: iconsPlacements.Paper,
+    Scissors: iconsPlacements.Scissors,
+  };
+
+  useEffect(() => {
+    setShowResult(false);
+    if (playerSelectedOption) {
+      setTimeout(() => {
+        const computerChoiceIndex = Math.floor(Math.random() * 3);
+        const computerSelectedIcon = GameIcons.find(
+          item => item?.index === computerChoiceIndex,
+        );
+        setComputerSelectedOption(computerSelectedIcon);
+        setShowComputerChoice(true);
+        const winner = determineWinner(
+          playerSelectedOption?.index,
+          computerChoiceIndex,
+        );
+        setScore(
+          winner === ResultStatus?.win
+            ? score + 1
+            : winner === ResultStatus?.lose
+            ? score - 1
+            : score,
+        );
+        setShowResult(true);
+        setResult(winner);
+      }, 1500);
+    }
+  }, [playerSelectedOption]);
+
+  const resetGame = () => {
+    setPlayerSelectedOption(null);
+    setShowComputerChoice(false);
+    setResult('');
+  };
+
   return (
-    <Box sx={{ position: 'relative' }}>
-      <img src={Assets?.triangle?.icon} />
+    <>
       <Box
         sx={{
-          ...outerLayerDefaultStyles,
-          left: '-1rem',
-          top: '-2rem',
-          background: 'radial-gradient(hsl(230, 89%, 62%), hsl(230, 89%, 65%))',
-          boxShadow: '0 6px 0 #2a46c2',
+          position: 'relative',
+          display: playerSelectedOption !== null ? 'none' : 'block',
         }}>
-        <Avatar sx={{ ...innerLayerDefaultStyles }}>
-          <img src={Assets?.paper?.icon} />
-        </Avatar>
+        <img src={Assets?.triangle?.icon} />
+        {GameIcons?.map(item => (
+          <GameIcon
+            key={item?.index}
+            item={item}
+            iconsPlacements={iconsPlacementsStyles[item?.name]}
+            setPlayerSelectedOption={setPlayerSelectedOption}
+          />
+        ))}
       </Box>
 
-      <Box
-        sx={{
-          ...outerLayerDefaultStyles,
-          right: '-1rem',
-          top: '-2rem',
-          background: 'radial-gradient( hsl(39, 89%, 49%), hsl(40, 84%, 53%))',
-          boxShadow: '0 6px 0 #c46b19',
-        }}>
-        <Avatar sx={{ ...innerLayerDefaultStyles }}>
-          <img src={Assets?.scissors?.icon} />
-        </Avatar>
-      </Box>
+      {playerSelectedOption ? (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1rem',
+            maxWidth: isMobile || !showComputerChoice ? '42rem' : '48rem',
+            width: '100%',
+            transition: 'max-width 0.3s ease-in-out',
+          }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column-reverse', sm: 'column' },
+                alignItems: 'center',
+                gap: { xs: '1.5rem', sm: '3rem' },
+              }}>
+              <Typography
+                sx={{
+                  fontSize: { xs: '1rem', sm: '1.5rem' },
+                  letterSpacing: '2px',
+                }}>
+                YOU PICKED
+              </Typography>
+              <GameIcon
+                item={playerSelectedOption}
+                size={isMobile ? 'small' : 'large'}
+              />
+            </Box>
 
-      <Box
-        sx={{
-          ...outerLayerDefaultStyles,
-          bottom: 0,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          background: 'radial-gradient(hsl(349, 71%, 52%), hsl(349, 70%, 56%))',
-          boxShadow: '0 6px 0 #9d1730',
-        }}>
-        <Avatar sx={{ ...innerLayerDefaultStyles }}>
-          <img src={Assets?.rock?.icon} />
-        </Avatar>
-      </Box>
-    </Box>
+            {!isMobile && (
+              <Box
+                sx={{
+                  opacity: showResult ? '100%' : '0%',
+                  transition: 'opacity 0.5s ease-in-out',
+                }}>
+                <Box
+                  sx={{
+                    display: showResult ? 'block' : 'none',
+                  }}>
+                  <Result result={result} resetGame={resetGame} />
+                </Box>
+              </Box>
+            )}
+
+            <Box
+              sx={{
+                display: 'flex',
+                flexDirection: { xs: 'column-reverse', sm: 'column' },
+                alignItems: 'center',
+                height: '100%',
+                gap: showComputerChoice
+                  ? { xs: '1.5rem', sm: '3rem' }
+                  : { xs: '3rem', sm: '4rem' },
+              }}>
+              <Typography
+                sx={{
+                  fontSize: { xs: '1rem', sm: '1.5rem' },
+                  letterSpacing: '2px',
+                }}>
+                THE HOUSE PICKED
+              </Typography>
+              <Box
+                sx={{
+                  width: { xs: '8rem', sm: '11rem' },
+                  height: { xs: '8rem', sm: '11rem' },
+                  backgroundColor: 'rgba(23, 34, 64, 40%)',
+                  borderRadius: '50%',
+                  display: showComputerChoice ? 'none' : 'block',
+                }}
+              />
+              {showComputerChoice ? (
+                <GameIcon
+                  item={computerSelectedOption}
+                  size={isMobile ? 'small' : 'large'}
+                />
+              ) : (
+                <></>
+              )}
+            </Box>
+          </Box>
+
+          {isMobile && (
+            <Box
+              sx={{
+                opacity: showResult ? '100%' : '0%',
+                transition: 'opacity 0.5s ease-in-out',
+              }}>
+              <Box sx={{ display: showResult ? 'block' : 'none' }}>
+                <Result result={result} resetGame={resetGame} />
+              </Box>
+            </Box>
+          )}
+        </Box>
+      ) : (
+        <></>
+      )}
+    </>
   );
 };
 

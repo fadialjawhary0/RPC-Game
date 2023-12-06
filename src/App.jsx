@@ -19,13 +19,29 @@ const theme = createTheme({
             borderColor: '#c9c9c9',
           },
         },
+        contained: {
+          backgroundColor: '#e4e4e4',
+          color: '#3b4363',
+          '&:hover': {
+            backgroundColor: '#f3f3f3',
+            color: '#BA2D4A',
+          },
+        },
       },
     },
+
     MuiDialogTitle: {
       styleOverrides: {
         root: {
           padding: 0,
           lineHeight: 1,
+        },
+      },
+    },
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          color: '#ffffff',
         },
       },
     },
