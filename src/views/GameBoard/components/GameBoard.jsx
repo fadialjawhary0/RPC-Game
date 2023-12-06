@@ -1,21 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
-import { Box, Button, Typography, useMediaQuery } from '@mui/material';
+import { Box, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@emotion/react';
 
-import { Assets, GameIcons } from '../../../constants/assets.const.mjs';
-import GameIcon from '../../../components/GameIcon';
-import Result from './Result';
 import { determineWinner } from '../../../helpers/determineWinner.helper';
+import { Assets, GameIcons } from '../../../constants/assets.const.mjs';
+import { ScoreContext } from '../../../context/score.context';
+import { ResultStatus } from '../../../constants';
+import GameIcon from './GameIcon';
+import Result from './Result';
 
 const GameBoard = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const { score, setScore } = useContext(ScoreContext);
+
   const [playerSelectedOption, setPlayerSelectedOption] = useState(null);
   const [computerSelectedOption, setComputerSelectedOption] = useState(null);
   const [showComputerChoice, setShowComputerChoice] = useState(false);
   const [result, setResult] = useState('');
+  const [showResult, setShowResult] = useState(false);
 
   const iconsPlacements = {
     Rock: {
@@ -43,6 +48,7 @@ const GameBoard = () => {
   };
 
   useEffect(() => {
+    setShowResult(false);
     if (playerSelectedOption) {
       setTimeout(() => {
         const computerChoiceIndex = Math.floor(Math.random() * 3);
@@ -55,8 +61,16 @@ const GameBoard = () => {
           playerSelectedOption?.index,
           computerChoiceIndex,
         );
+        setScore(
+          winner === ResultStatus?.win
+            ? score + 1
+            : winner === ResultStatus?.lose
+            ? score - 1
+            : score,
+        );
+        setShowResult(true);
         setResult(winner);
-      }, 3000);
+      }, 1500);
     }
   }, [playerSelectedOption]);
 
@@ -90,7 +104,7 @@ const GameBoard = () => {
             display: 'flex',
             flexDirection: 'column',
             gap: '1rem',
-            maxWidth: isMobile || !showComputerChoice ? '42rem' : '46rem',
+            maxWidth: isMobile || !showComputerChoice ? '42rem' : '48rem',
             width: '100%',
             transition: 'max-width 0.3s ease-in-out',
           }}>
@@ -123,10 +137,15 @@ const GameBoard = () => {
             {!isMobile && (
               <Box
                 sx={{
-                  opacity: showComputerChoice ? '100%' : '0%',
+                  opacity: showResult ? '100%' : '0%',
                   transition: 'opacity 0.5s ease-in-out',
                 }}>
-                <Result result={result} resetGame={resetGame} />
+                <Box
+                  sx={{
+                    display: showResult ? 'block' : 'none',
+                  }}>
+                  <Result result={result} resetGame={resetGame} />
+                </Box>
               </Box>
             )}
 
@@ -135,6 +154,7 @@ const GameBoard = () => {
                 display: 'flex',
                 flexDirection: { xs: 'column-reverse', sm: 'column' },
                 alignItems: 'center',
+                height: '100%',
                 gap: showComputerChoice
                   ? { xs: '1.5rem', sm: '3rem' }
                   : { xs: '3rem', sm: '4rem' },
@@ -169,10 +189,12 @@ const GameBoard = () => {
           {isMobile && (
             <Box
               sx={{
-                opacity: showComputerChoice ? '100%' : '0%',
+                opacity: showResult ? '100%' : '0%',
                 transition: 'opacity 0.5s ease-in-out',
               }}>
-              <Result result={result} resetGame={resetGame} />
+              <Box sx={{ display: showResult ? 'block' : 'none' }}>
+                <Result result={result} resetGame={resetGame} />
+              </Box>
             </Box>
           )}
         </Box>

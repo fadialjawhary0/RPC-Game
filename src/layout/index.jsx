@@ -5,6 +5,7 @@ import { Box } from '@mui/material';
 import Header from '../views/Header/components/Header';
 import GameBoard from '../views/GameBoard/components/GameBoard';
 import RulesButton from '../views/GameRules/components/RulesButton';
+import { ScoreProvider } from '../context/score.context';
 
 const Layout = () => {
   return (
@@ -18,8 +19,10 @@ const Layout = () => {
         alignItems: 'center',
         gap: '5rem',
       }}>
-      <Header />
-      <GameBoard />
+      <ScoreProvider>
+        <Header />
+        <GameBoard />
+      </ScoreProvider>
       <RulesButton />
     </Box>
   );

@@ -1,11 +1,13 @@
+import { ResultStatus } from '../constants';
+
 export const determineWinner = (playerChoice, computerChoice) => {
   const result = (playerChoice - computerChoice + 3) % 3;
 
   if (result === 0) {
-    return 'TIE';
+    return ResultStatus?.tie;
   } else if (result === 1) {
-    return 'YOU WIN';
+    return ResultStatus?.win;
   } else {
-    return 'YOU LOSE';
+    return ResultStatus?.lose;
   }
 };
