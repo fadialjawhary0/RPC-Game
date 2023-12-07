@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.js": "/rpc-game/static/js/main.6d40329f.js",
+    "static/media/logo.svg": "/rpc-game/static/media/logo.a4a2b39fefcdb6a1a808.svg",
+    "static/media/image-rules.svg": "/rpc-game/static/media/image-rules.258b753fb6284dc8ae00.svg",
+    "static/media/icon-paper.svg": "/rpc-game/static/media/icon-paper.8b57a6b108c1b8ae8293.svg",
+    "index.html": "/rpc-game/index.html",
+    "static/media/icon-scissors.svg": "/rpc-game/static/media/icon-scissors.3b1a5d7eb0b2f1fd3e95.svg",
+    "static/media/icon-rock.svg": "/rpc-game/static/media/icon-rock.476e90a9646a87bb3645.svg",
+    "static/media/icon-close.svg": "/rpc-game/static/media/icon-close.bde602ecd1a4e55e0c27.svg",
+    "static/media/bg-triangle.svg": "/rpc-game/static/media/bg-triangle.77c6ca418d3751d8f717.svg",
+    "main.6d40329f.js.map": "/rpc-game/static/js/main.6d40329f.js.map"
+  },
+  "entrypoints": [
+    "static/js/main.6d40329f.js"
+  ]
+}
